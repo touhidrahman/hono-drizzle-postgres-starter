@@ -22,3 +22,5 @@ To run the application, run the following command:
 ```bash
 docker compose up
 ```
+
+> Semoga ga terlantar ini project :v, bismillah konsisten awkaokwoa
