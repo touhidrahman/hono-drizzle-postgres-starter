@@ -5,16 +5,13 @@ FROM oven/bun:latest
 WORKDIR /app
 
 # Copy package files terlebih dahulu untuk optimalisasi layer caching
-COPY package.json bun.lockb ./
+COPY package.json bun.lock ./
 
 # Install dependencies
-RUN bun install --frozen-lockfile
+RUN bun install --frozen-lockfile --force
 
 # Copy semua file source code
 COPY . .
-
-# (Opsional) Jalankan migrasi Drizzle jika diperlukan
-# RUN bun run migrate
 
 # Expose port
 EXPOSE 3000
