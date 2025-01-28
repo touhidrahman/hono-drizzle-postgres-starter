@@ -7,6 +7,7 @@ This is a starter code for the Hono RestAPI project. The starter code will using
 - Oauth2
 - Drizzle ORM
 - PostgreSQL
+- Redis
 - Docker
 
 ## Getting Started
