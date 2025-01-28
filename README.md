@@ -5,6 +5,7 @@ This is a starter code for the Hono RestAPI project. The starter code will using
 - Hono
 - JWT
 - Oauth2
+- OTP Email
 - Drizzle ORM
 - PostgreSQL
 - Redis

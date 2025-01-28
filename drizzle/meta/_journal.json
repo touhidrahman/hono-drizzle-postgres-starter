@@ -8,6 +8,20 @@
       "when": 1738069615149,
       "tag": "0000_big_electro",
       "breakpoints": true
+    },
+    {
+      "idx": 1,
+      "version": "7",
+      "when": 1738092404180,
+      "tag": "0001_superb_baron_zemo",
+      "breakpoints": true
+    },
+    {
+      "idx": 2,
+      "version": "7",
+      "when": 1738106726861,
+      "tag": "0002_silly_magneto",
+      "breakpoints": true
     }
   ]
 }
