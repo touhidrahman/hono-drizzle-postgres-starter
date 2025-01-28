@@ -1,5 +1,6 @@
 import {drizzle} from "drizzle-orm/node-postgres";
 import {Pool} from "pg";
+import {drizzleLogger} from "../logging";
 
 const pool = new Pool({
     connectionString: process.env.DATABASE_URL!,
@@ -7,4 +8,6 @@ const pool = new Pool({
     idleTimeoutMillis: 30000
 });
 
-export const db = drizzle({client: pool});
+export const db = drizzle(pool, {
+    logger: drizzleLogger
+});
