@@ -13,9 +13,7 @@ export const logger = winston.createLogger({
 
 export const drizzleLogger: Logger = {
     logQuery(query: string, params: unknown[]) {
-        const formattedQuery = query
-            .replace(/\s+/g, ' ')
-            .trim();
+        const formattedQuery = query.replace(/\s+/g, ' ').trim();
 
         const formattedParams = params.map(param => {
             if (typeof param === 'string') {
@@ -25,17 +23,23 @@ export const drizzleLogger: Logger = {
         });
 
         const paramCount = (query.match(/\$\d+/g) || []).length;
-        const rowCount = params.length / paramCount;
-        const groupedParams = [];
 
+        const groupedParams = [];
         for (let i = 0; i < formattedParams.length; i += paramCount) {
             groupedParams.push(formattedParams.slice(i, i + paramCount));
         }
 
-        winston.info('Database Query', {
-            query: formattedQuery,
-            params: groupedParams,
-            timestamp: new Date().toISOString()
-        });
+        const logMessage = `
+                === Database Query ===
+                Query: ${formattedQuery}
+                Parameters:
+                ${groupedParams
+            .map((params, index) => `  Row ${index + 1}: ${JSON.stringify(params)}`)
+            .join('\n')}
+                Timestamp: ${new Date().toISOString()}
+                =======================
+                `;
+
+        logger.info(logMessage);
     }
 };
