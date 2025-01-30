@@ -2,17 +2,10 @@ import {integer, pgEnum, pgTable, timestamp, varchar} from "drizzle-orm/pg-core"
 import {uuid} from "drizzle-orm/pg-core/columns/uuid";
 import {sql} from "drizzle-orm";
 import {date} from "drizzle-orm/pg-core/columns/date";
+import {Role} from "../../types/enum/role-enum";
+import {enumToArray} from "../../util/enum-util";
 
-enum Role {
-    USER = "USER",
-    ADMIN = "ADMIN"
-}
-
-function toArray(enumObj: any): string[] {
-    return Object.values(enumObj).filter(value => typeof value === "string") as string[];
-}
-
-export const roleEnum = pgEnum("role", toArray(Role) as [string, ...string[]]);
+export const roleEnum = pgEnum("role", enumToArray(Role) as [string, ...string[]]);
 
 export const usersTable = pgTable("users", {
     id: uuid().unique().primaryKey().default(sql`uuid_generate_v4

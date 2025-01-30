@@ -1,10 +1,7 @@
 import redis from "../config/redis";
 import {generateOTP} from "../util/otp-util";
 import {HTTPException} from "hono/http-exception";
-import {db} from "../config/db";
-import {usersTable} from "../config/db/schema";
-import {eq, sql} from "drizzle-orm";
-import {SendOTPRequest, VerifyOTPRequest} from "../model/user-model";
+import {SendOTPRequest, UserRepository, VerifyOTPRequest} from "../model/user-model";
 
 export class OtpService {
     static async generateAndStoreOTP(email: SendOTPRequest): Promise<string> {
@@ -25,12 +22,10 @@ export class OtpService {
         await redis.del(`otp:${request.email}`);
 
         if (purpose === 'register') {
-            const user = await db.select({
-                emailVerified: usersTable.emailVerified
-            })
-                .from(usersTable)
-                .where(eq(usersTable.email, request.email))
-                .limit(1);
+            const user = await UserRepository.findByColumn('email', request.email, {
+                columns: ['emailVerified'],
+                limit: 1
+            });
 
             if (user.length > 0 && user[0].emailVerified) {
                 throw new HTTPException(400, {
@@ -38,10 +33,9 @@ export class OtpService {
                 });
             }
 
-            await db.update(usersTable)
-                .set({ emailVerified: new Date() })
-                .where(eq(usersTable.email, request.email))
-                .execute();
+            await UserRepository.update(request.email, 'email', {
+                emailVerified: new Date()
+            });
         }
 
         return;

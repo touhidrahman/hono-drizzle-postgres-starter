@@ -1,15 +1,13 @@
-import {RegisterUserRequest, toUserResponse, UserResponse} from "../model/user-model";
-import {AuthValidation} from "../validation/auth-validation";
-import {db} from "../config/db";
+import {RegisterUserRequest, toUserResponse, UserRepository, UserResponse} from "../model/user-model";
 import {eq} from "drizzle-orm";
-import {usersTable} from "../config/db/schema";
+import {User, usersTable} from "../config/db/schema";
 import {HTTPException} from "hono/http-exception";
 import {password} from "bun";
 import {logger} from "../config/logging";
 
 export class AuthService {
     static async register(request: RegisterUserRequest): Promise<UserResponse> {
-        const existingUser = await db.$count(usersTable, eq(usersTable.email, request.email));
+        const existingUser = await UserRepository.count(eq(usersTable.email, request.email));
 
         if (existingUser > 0) {
             throw new HTTPException(400, {
@@ -22,7 +20,7 @@ export class AuthService {
             cost: 10
         });
 
-        const [user] = await db.insert(usersTable).values(request).returning();
+        const user = await UserRepository.create(request);
 
         logger.info("User registered successfully");
 

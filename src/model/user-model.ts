@@ -1,4 +1,8 @@
-import {User} from "../config/db/schema";
+import {User, usersTable} from "../config/db/schema";
+import {Repository} from "../types/repository";
+import {db} from "../config/db";
+
+export const UserRepository = new Repository<User>(db, usersTable);
 
 export type RegisterUserRequest = {
     name: string;
