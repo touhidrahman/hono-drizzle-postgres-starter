@@ -1,14 +1,19 @@
 import * as winston from 'winston';
 import {Logger} from 'drizzle-orm';
 
+const {combine, timestamp, printf, colorize, align} = winston.format;
+
 export const logger = winston.createLogger({
-    level: 'debug',
-    format: winston.format.json(),
-    transports: [
-        new winston.transports.Console({
-            format: winston.format.simple(),
+    level: process.env.LOG_LEVEL || 'info',
+    format: combine(
+        colorize({all: true}),
+        timestamp({
+            format: 'YYYY-MM-DD hh:mm:ss.SSS A',
         }),
-    ],
+        align(),
+        printf((info) => `[${info.timestamp}] ${info.level}: ${info.message}`)
+    ),
+    transports: [new winston.transports.Console()],
 });
 
 export const drizzleLogger: Logger = {
@@ -36,7 +41,6 @@ export const drizzleLogger: Logger = {
                 ${groupedParams
             .map((params, index) => `  Row ${index + 1}: ${JSON.stringify(params)}`)
             .join('\n')}
-                Timestamp: ${new Date().toISOString()}
                 =======================
                 `;
 
