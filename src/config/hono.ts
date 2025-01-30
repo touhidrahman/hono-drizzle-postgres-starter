@@ -1,10 +1,10 @@
 import {OpenAPIHono} from "@hono/zod-openapi";
-import {User} from "./db/schema";
 import {HTTPException} from "hono/http-exception";
 import {logger} from "./logging";
+import {ApplicationVariables} from "../model/app-model";
 
 export const honoApp = () =>
-    new OpenAPIHono<{ Variables: { user: User | null } }>({
+    new OpenAPIHono<{ Variables: ApplicationVariables }>({
         defaultHook: (result) => {
             if (result.success) {
                 return;
