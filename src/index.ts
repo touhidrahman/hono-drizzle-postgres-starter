@@ -1,10 +1,9 @@
-import {OpenAPIHono} from "@hono/zod-openapi";
 import {swaggerUI} from "@hono/swagger-ui";
 import errorUtil from "./util/error-util";
 import {authController} from "./controller/auth-controller";
-import {RouteCollector} from "./util/route-util";
+import {honoApp} from "./config/hono";
 
-const app = new OpenAPIHono()
+const app = honoApp()
 
 app.route("/api/v1/auth", authController);
 
@@ -23,11 +22,5 @@ app.get('/', (c) => {
 });
 
 app.get('/ui', swaggerUI({url: '/doc'}))
-app.get('/route-list', (c) => {
-    RouteCollector.collect(app)
-    const routes = RouteCollector.getRoutes()
-    const routesTable = routes.join('\n')
-    return c.text(`Method Path\n${routesTable}`)
-})
 
 export default app

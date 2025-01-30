@@ -18,7 +18,9 @@ export class AuthValidation {
         name: z.string().min(3),
     });
 
-    static readonly SEND_OTP: ZodType = z.string().email();
+    static readonly SEND_OTP: ZodType = z.object({
+        email: z.string().email(),
+    });
 
     static readonly TOKEN: ZodType = z.string().min(4).max(100);
 

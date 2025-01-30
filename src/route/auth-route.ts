@@ -1,5 +1,5 @@
 import {createRouteUtil} from "../util/route-util";
-import {z} from "zod";
+import {any, z} from "zod";
 import {AuthValidation} from "../validation/auth-validation";
 
 export const registerRoute = createRouteUtil(
@@ -13,5 +13,16 @@ export const registerRoute = createRouteUtil(
             email: z.string(),
             name: z.string(),
         }),
+    })
+);
+
+export const sendOTPRoute = createRouteUtil(
+    "post",
+    "/send-otp",
+    AuthValidation.SEND_OTP,
+    z.object({
+        status: z.string(),
+        message: z.string(),
+        data: any(),
     })
 );

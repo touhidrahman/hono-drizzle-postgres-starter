@@ -110,23 +110,4 @@ export const createRouteUtil = (method: "post" | "get" | "put" | "patch" | "dele
             },
         },
     });
-}
-
-export class RouteCollector {
-    private static routes = new Set<string>()
-
-    static collect(app: OpenAPIHono) {
-        const routePatterns = app.routes.map(route => ({
-            method: route.method,
-            path: route.path,
-        }))
-
-        routePatterns.forEach(({method, path}) => {
-            this.routes.add(`${method} ${path}`)
-        })
-    }
-
-    static getRoutes() {
-        return Array.from(this.routes).sort()
-    }
-}
+};

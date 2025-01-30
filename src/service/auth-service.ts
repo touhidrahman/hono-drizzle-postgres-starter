@@ -6,12 +6,9 @@ import {usersTable} from "../config/db/schema";
 import {HTTPException} from "hono/http-exception";
 import {password} from "bun";
 import {logger} from "../config/logging";
-import {EmailService} from "./email-service";
 
 export class AuthService {
-    static async registerUser(request: RegisterUserRequest): Promise<UserResponse> {
-        request = AuthValidation.REGISTER.parse(request);
-
+    static async register(request: RegisterUserRequest): Promise<UserResponse> {
         const existingUser = await db.$count(usersTable, eq(usersTable.email, request.email));
 
         if (existingUser > 0) {
@@ -28,8 +25,6 @@ export class AuthService {
         const [user] = await db.insert(usersTable).values(request).returning();
 
         logger.info("User registered successfully");
-
-        await EmailService.sendOTP(request.email);
 
         return toUserResponse(user);
     }

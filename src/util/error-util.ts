@@ -1,11 +1,11 @@
 import {HTTPException} from "hono/http-exception";
 import {ZodError} from "zod";
 import {ResponseUtil} from "./response-util";
-import {BlankEnv, HTTPResponseError} from "hono/types";
+import {HTTPResponseError} from "hono/types";
 import {Context} from "hono";
 import {logger} from "../config/logging";
 
-export default async function errorUtil(err: Error | HTTPResponseError, c: Context<BlankEnv, any, {}>) {
+export default async function errorUtil(err: Error | HTTPResponseError, c: any) {
     if (err instanceof HTTPException) {
         c.status(err.status);
         logger.error(err.message);
@@ -14,14 +14,12 @@ export default async function errorUtil(err: Error | HTTPResponseError, c: Conte
     } else if (err instanceof ZodError) {
         c.status(400);
         const errors = err.errors.map(error => ({
-            field: error.path[0],
-            message: error.message
+            message: `Invalid ${error.path[0]}`
         }));
 
-        logger.error('Validation error: ' + errors);
+        logger.error('Validation error: ' + JSON.stringify(errors));
 
         return c.json(ResponseUtil.error(errors, "Validation error"));
-
     } else {
         c.status(500);
         logger.error('Internal server error: ' + err);

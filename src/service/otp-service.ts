@@ -5,7 +5,7 @@ export class OtpService {
     static async generateAndStoreOTP(email: string): Promise<string> {
         const otp = generateOTP();
 
-        await redis.set(`otp:${email}`, otp, 'EX', 600);
+        await redis.set(`otp:${email}`, otp, 'EX', 300);
         return otp;
     }
 
