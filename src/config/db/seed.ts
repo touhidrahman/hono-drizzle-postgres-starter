@@ -13,7 +13,6 @@ async function seed() {
         name: faker.person.fullName(),
         email: faker.internet.email().toLowerCase(),
         password: faker.internet.password(),
-        emailVerified: faker.number.int({min: 0, max: 1}),
     }));
 
     await db.insert(usersTable).values(users);

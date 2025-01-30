@@ -1,5 +1,5 @@
 {
-  "id": "77b4f80c-6884-47c5-b0e3-4b8b722ca70b",
+  "id": "c685c331-f34b-4972-a382-10fe26b1d028",
   "prevId": "00000000-0000-0000-0000-000000000000",
   "version": "7",
   "dialect": "postgresql",
@@ -12,7 +12,8 @@
           "name": "id",
           "type": "uuid",
           "primaryKey": true,
-          "notNull": true
+          "notNull": true,
+          "default": "uuid_generate_v4\n    ()"
         },
         "name": {
           "name": "name",
@@ -31,6 +32,42 @@
           "type": "varchar(255)",
           "primaryKey": false,
           "notNull": true
+        },
+        "role": {
+          "name": "role",
+          "type": "role",
+          "typeSchema": "public",
+          "primaryKey": false,
+          "notNull": true,
+          "default": "'USER'"
+        },
+        "emailVerified": {
+          "name": "emailVerified",
+          "type": "timestamp",
+          "primaryKey": false,
+          "notNull": false,
+          "default": "NULL"
+        },
+        "createdAt": {
+          "name": "createdAt",
+          "type": "date",
+          "primaryKey": false,
+          "notNull": false,
+          "default": "now\n    ()"
+        },
+        "updatedAt": {
+          "name": "updatedAt",
+          "type": "date",
+          "primaryKey": false,
+          "notNull": false,
+          "default": "now\n    ()"
+        },
+        "deletedAt": {
+          "name": "deletedAt",
+          "type": "date",
+          "primaryKey": false,
+          "notNull": false,
+          "default": "NULL"
         }
       },
       "indexes": {},
@@ -57,7 +94,16 @@
       "isRLSEnabled": false
     }
   },
-  "enums": {},
+  "enums": {
+    "public.role": {
+      "name": "role",
+      "schema": "public",
+      "values": [
+        "USER",
+        "ADMIN"
+      ]
+    }
+  },
   "schemas": {},
   "sequences": {},
   "roles": {},

@@ -3,7 +3,7 @@ import errorUtil from "./util/error-util";
 import {honoApp} from "./config/hono";
 import {api} from "./route";
 
-const app = honoApp()
+const app = honoApp();
 
 app.route("/api/v1", api);
 

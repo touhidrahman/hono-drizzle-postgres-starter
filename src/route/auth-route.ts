@@ -26,3 +26,14 @@ export const sendOTPRoute = createRouteUtil(
         data: any(),
     })
 );
+
+export const verifyOTPRoute = createRouteUtil(
+    "post",
+    "/verify-otp",
+    AuthValidation.VERIFY_OTP,
+    z.object({
+        status: z.string(),
+        message: z.string(),
+        data: any(),
+    })
+);

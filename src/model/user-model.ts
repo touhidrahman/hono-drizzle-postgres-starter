@@ -16,6 +16,15 @@ export type UpdateUserRequest = {
     password?: string;
 }
 
+export type SendOTPRequest = {
+    email: string;
+}
+
+export type VerifyOTPRequest = {
+    email: string;
+    otp: number;
+}
+
 export type UserResponse = {
     email: string;
     name: string;
