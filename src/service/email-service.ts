@@ -5,7 +5,7 @@ import {HTTPException} from "hono/http-exception";
 import {SendOTPRequest, UserRepository} from "../model/user-model";
 
 export class EmailService {
-    static async sendOTP(email: SendOTPRequest): Promise<void> {
+    static async sendOTP(email: string): Promise<void> {
         const user = await UserRepository.findByColumn('email', email);
 
         if (!user) throw new HTTPException(404, {

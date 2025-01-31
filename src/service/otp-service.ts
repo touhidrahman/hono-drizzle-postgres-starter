@@ -4,7 +4,7 @@ import {HTTPException} from "hono/http-exception";
 import {SendOTPRequest, UserRepository, VerifyOTPRequest} from "../model/user-model";
 
 export class OtpService {
-    static async generateAndStoreOTP(email: SendOTPRequest): Promise<string> {
+    static async generateAndStoreOTP(email: string): Promise<string> {
         const otp = generateOTP();
 
         await redis.set(`otp:${email}`, otp, 'EX', 300);

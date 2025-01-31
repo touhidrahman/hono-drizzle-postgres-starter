@@ -15,6 +15,7 @@ export const usersTable = pgTable("users", {
     password: varchar({length: 255}).notNull(),
     role: roleEnum().default("USER").notNull(),
     emailVerified: timestamp().default(sql`NULL`),
+    loginAt: timestamp().default(sql`NULL`),
     createdAt: date().default(sql`now
     ()`),
     updatedAt: date().default(sql`now
