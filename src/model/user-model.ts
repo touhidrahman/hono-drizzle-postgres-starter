@@ -32,12 +32,15 @@ export type VerifyOTPRequest = {
 export type UserResponse = {
     email: string;
     name: string;
-    token?: string;
+    role: string;
+    accessToken?: string;
+    refreshToken?: string;
 }
 
 export function toUserResponse(user: User): UserResponse {
     return {
         email: user.email,
-        name: user.name
+        name: user.name,
+        role: user.role,
     }
 }

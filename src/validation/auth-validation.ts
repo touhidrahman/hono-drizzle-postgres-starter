@@ -39,6 +39,4 @@ export class AuthValidation {
         oldPassword: z.string().min(6),
         newPassword: z.string().min(6),
     });
-
-    static readonly OTP: ZodType = z.string().length(6);
 }

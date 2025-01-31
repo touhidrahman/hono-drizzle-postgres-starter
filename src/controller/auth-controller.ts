@@ -1,5 +1,5 @@
-import {registerRoute, sendOTPRoute, verifyOTPRoute} from "../route/auth-route";
-import {RegisterUserRequest, SendOTPRequest, VerifyOTPRequest} from "../model/user-model";
+import {loginRoute, registerRoute, sendOTPRoute, verifyOTPRoute} from "../route/auth-route";
+import {LoginUserRequest, RegisterUserRequest, SendOTPRequest, VerifyOTPRequest} from "../model/user-model";
 import {AuthService} from "../service/auth-service";
 import {ResponseUtil} from "../util/response-util";
 import {EmailService} from "../service/email-service";
@@ -30,4 +30,12 @@ authController.openapi(verifyOTPRoute, async (c) => {
     await OtpService.verifyOTP(request, 'register');
 
     return c.json(ResponseUtil.success(null, 'OTP verified successfully'));
+});
+
+authController.openapi(loginRoute, async (c) => {
+    const request = await c.req.json() as LoginUserRequest;
+
+    const response = await AuthService.login(request);
+
+    return c.json(ResponseUtil.success(response, 'Login successfully'));
 });
