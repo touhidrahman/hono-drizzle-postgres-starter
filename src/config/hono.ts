@@ -11,13 +11,13 @@ export const honoApp = () =>
             }
 
             const errors = result.error.errors
-                .map(error => `Invalid ${error.path[0]}`)
+                .map(error => `Invalid ${error.path[0]} (${error.message})`)
                 .join(", ");
 
             logger.error('Validation error: ' + errors);
 
             throw new HTTPException(422, {
-                message: errors
+                message: errors,
             });
         },
     });

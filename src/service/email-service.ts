@@ -1,14 +1,12 @@
 import {OtpService} from "./otp-service";
 import {logger} from "../config/logging";
 import {emailQueue} from "../config/queue";
-import {db} from "../config/db";
-import {usersTable} from "../config/db/schema";
-import {eq} from "drizzle-orm";
 import {HTTPException} from "hono/http-exception";
+import {SendOTPRequest, UserRepository} from "../model/user-model";
 
 export class EmailService {
     static async sendOTP(email: string): Promise<void> {
-        const [user] = await db.select().from(usersTable).where(eq(usersTable.email, email)).limit(1);
+        const user = await UserRepository.findByColumn('email', email);
 
         if (!user) throw new HTTPException(404, {
             message: 'User not found'

@@ -1,0 +1,1 @@
+ALTER TABLE "users" ADD COLUMN "loginAt" timestamp DEFAULT NULL;

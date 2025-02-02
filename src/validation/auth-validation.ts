@@ -22,6 +22,11 @@ export class AuthValidation {
         email: z.string().email(),
     });
 
+    static readonly VERIFY_OTP: ZodType = z.object({
+        email: z.string().email(),
+        otp: z.string().length(6),
+    });
+
     static readonly TOKEN: ZodType = z.string().min(4).max(100);
 
     static readonly RESET_PASSWORD: ZodType = z.object({
@@ -34,6 +39,4 @@ export class AuthValidation {
         oldPassword: z.string().min(6),
         newPassword: z.string().min(6),
     });
-
-    static readonly OTP: ZodType = z.string().length(6);
 }

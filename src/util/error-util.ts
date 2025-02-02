@@ -19,7 +19,7 @@ export default async function errorUtil(err: Error | HTTPResponseError, c: any) 
 
         logger.error('Validation error: ' + JSON.stringify(errors));
 
-        return c.json(ResponseUtil.error(errors, "Validation error"));
+        return c.json(ResponseUtil.error(errors));
     } else {
         c.status(500);
         logger.error('Internal server error: ' + err);

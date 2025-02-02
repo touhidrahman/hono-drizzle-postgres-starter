@@ -1,6 +1,6 @@
 {
-  "id": "b4d5a267-9fd7-455e-ab1c-0877eb9ab9c3",
-  "prevId": "77b4f80c-6884-47c5-b0e3-4b8b722ca70b",
+  "id": "92e8f7d7-5e49-4942-b524-a611db29d416",
+  "prevId": "c685c331-f34b-4972-a382-10fe26b1d028",
   "version": "7",
   "dialect": "postgresql",
   "tables": {
@@ -12,7 +12,8 @@
           "name": "id",
           "type": "uuid",
           "primaryKey": true,
-          "notNull": true
+          "notNull": true,
+          "default": "uuid_generate_v4\n    ()"
         },
         "name": {
           "name": "name",
@@ -32,12 +33,48 @@
           "primaryKey": false,
           "notNull": true
         },
-        "emailVerified": {
-          "name": "emailVerified",
-          "type": "integer",
+        "role": {
+          "name": "role",
+          "type": "role",
+          "typeSchema": "public",
           "primaryKey": false,
           "notNull": true,
-          "default": 0
+          "default": "'USER'"
+        },
+        "emailVerified": {
+          "name": "emailVerified",
+          "type": "timestamp",
+          "primaryKey": false,
+          "notNull": false,
+          "default": "NULL"
+        },
+        "loginAt": {
+          "name": "loginAt",
+          "type": "timestamp",
+          "primaryKey": false,
+          "notNull": false,
+          "default": "NULL"
+        },
+        "createdAt": {
+          "name": "createdAt",
+          "type": "date",
+          "primaryKey": false,
+          "notNull": false,
+          "default": "now\n    ()"
+        },
+        "updatedAt": {
+          "name": "updatedAt",
+          "type": "date",
+          "primaryKey": false,
+          "notNull": false,
+          "default": "now\n    ()"
+        },
+        "deletedAt": {
+          "name": "deletedAt",
+          "type": "date",
+          "primaryKey": false,
+          "notNull": false,
+          "default": "NULL"
         }
       },
       "indexes": {},
@@ -64,7 +101,16 @@
       "isRLSEnabled": false
     }
   },
-  "enums": {},
+  "enums": {
+    "public.role": {
+      "name": "role",
+      "schema": "public",
+      "values": [
+        "USER",
+        "ADMIN"
+      ]
+    }
+  },
   "schemas": {},
   "sequences": {},
   "roles": {},
