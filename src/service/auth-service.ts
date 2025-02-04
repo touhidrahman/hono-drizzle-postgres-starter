@@ -1,4 +1,11 @@
-import {LoginUserRequest, RegisterUserRequest, toUserResponse, UserRepository, UserResponse} from "../model/user-model";
+import {
+    LoginUserRequest,
+    RegisterUserRequest,
+    ResetPasswordRequest,
+    toUserResponse,
+    UserRepository,
+    UserResponse
+} from "../model/user-model";
 import {eq} from "drizzle-orm";
 import {User, usersTable} from "../config/db/schema";
 import {HTTPException} from "hono/http-exception";
@@ -70,5 +77,29 @@ export class AuthService {
         logger.info("User logged out successfully");
 
         return;
+    }
+
+    static async resetPassword(request: ResetPasswordRequest): Promise<UserResponse> {
+        const storedOTP = await redis.get(`otp:${request.email}`);
+        if (storedOTP !== String(request.otp)) {
+            throw new HTTPException(401, {
+                message: 'Invalid OTP'
+            });
+        }
+
+        await redis.del(`otp:${request.email}`);
+
+        const pw = await password.hash(request.password, {
+            algorithm: "bcrypt",
+            cost: 10
+        });
+
+        const user = await UserRepository.update(request.email, 'email', {
+            password: pw,
+        });
+
+        logger.info("Password reset successfully");
+
+        return toUserResponse(user);
     }
 }

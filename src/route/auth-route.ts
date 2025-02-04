@@ -68,3 +68,14 @@ export const logoutRoute = createRouteUtil(
     undefined,
     [{BearerAuth: []}],
 );
+
+export const resetPasswordRoute = createRouteUtil(
+    "post",
+    "/reset-password",
+    z.object({
+        status: z.string(),
+        message: z.string(),
+        data: z.null(),
+    }),
+    AuthValidation.RESET_PASSWORD,
+);
