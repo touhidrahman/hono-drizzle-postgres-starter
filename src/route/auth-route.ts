@@ -6,7 +6,6 @@ import {UserResponse} from "../model/user-model";
 export const registerRoute = createRouteUtil(
     "post",
     "/register",
-    AuthValidation.REGISTER,
     z.object({
         status: z.string(),
         message: z.string(),
@@ -14,44 +13,58 @@ export const registerRoute = createRouteUtil(
             email: z.string(),
             name: z.string(),
         }),
-    })
+    }),
+    AuthValidation.REGISTER,
 );
 
 export const sendOTPRoute = createRouteUtil(
     "post",
     "/send-otp",
-    AuthValidation.SEND_OTP,
     z.object({
         status: z.string(),
         message: z.string(),
         data: z.null(),
-    })
+    }),
+    AuthValidation.SEND_OTP,
 );
 
 export const verifyOTPRoute = createRouteUtil(
     "post",
     "/verify-otp",
-    AuthValidation.VERIFY_OTP,
     z.object({
         status: z.string(),
         message: z.string(),
         data: z.null(),
-    })
+    }),
+    AuthValidation.VERIFY_OTP,
 );
 
 export const loginRoute = createRouteUtil(
+        "post",
+        "/login",
+        z.object({
+            status: z.string(),
+            message: z.string(),
+            data: z.object({
+                email: z.string().email(),
+                name: z.string(),
+                role: z.string(),
+                accessToken: z.string(),
+                refreshToken: z.string()
+            }),
+        }),
+        AuthValidation.LOGIN,
+    )
+;
+
+export const logoutRoute = createRouteUtil(
     "post",
-    "/login",
-    AuthValidation.LOGIN,
+    "/logout",
     z.object({
         status: z.string(),
         message: z.string(),
-        data: z.object({
-            email: z.string().email(),
-            name: z.string(),
-            role: z.string(),
-            accessToken: z.string(),
-            refreshToken: z.string()
-        }),
-    })
+        data: z.null(),
+    }),
+    undefined,
+    [{BearerAuth: []}],
 );
