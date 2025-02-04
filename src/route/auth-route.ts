@@ -1,12 +1,12 @@
 import {createRouteUtil} from "../util/route-util";
 import {any, z} from "zod";
 import {AuthValidation} from "../validation/auth-validation";
-import {UserResponse} from "../model/user-model";
 
-export const registerRoute = createRouteUtil(
-    "post",
-    "/register",
-    z.object({
+export const registerRoute = createRouteUtil({
+    method: "post",
+    path: "/register",
+    tags: ["Auth"],
+    responseSchema: z.object({
         status: z.string(),
         message: z.string(),
         data: z.object({
@@ -14,68 +14,77 @@ export const registerRoute = createRouteUtil(
             name: z.string(),
         }),
     }),
-    AuthValidation.REGISTER,
-);
+    requestSchema: AuthValidation.REGISTER,
+    description: "Register a new user",
+});
 
-export const sendOTPRoute = createRouteUtil(
-    "post",
-    "/send-otp",
-    z.object({
+export const sendOTPRoute = createRouteUtil({
+    method: "post",
+    path: "/send-otp",
+    tags: ["Auth"],
+    responseSchema: z.object({
         status: z.string(),
         message: z.string(),
         data: z.null(),
     }),
-    AuthValidation.SEND_OTP,
-);
+    requestSchema: AuthValidation.SEND_OTP,
+    description: "Send OTP to the user",
+});
 
-export const verifyOTPRoute = createRouteUtil(
-    "post",
-    "/verify-otp",
-    z.object({
+export const verifyOTPRoute = createRouteUtil({
+    method: "post",
+    path: "/verify-otp",
+    tags: ["Auth"],
+    responseSchema: z.object({
         status: z.string(),
         message: z.string(),
         data: z.null(),
     }),
-    AuthValidation.VERIFY_OTP,
-);
+    requestSchema: AuthValidation.VERIFY_OTP,
+    description: "Verify OTP of the user",
+});
 
-export const loginRoute = createRouteUtil(
-        "post",
-        "/login",
-        z.object({
-            status: z.string(),
-            message: z.string(),
-            data: z.object({
-                email: z.string().email(),
-                name: z.string(),
-                role: z.string(),
-                accessToken: z.string(),
-                refreshToken: z.string()
-            }),
+export const loginRoute = createRouteUtil({
+    method: "post",
+    path: "/login",
+    tags: ["Auth"],
+    responseSchema: z.object({
+        status: z.string(),
+        message: z.string(),
+        data: z.object({
+            email: z.string().email(),
+            name: z.string(),
+            role: z.string(),
+            accessToken: z.string(),
+            refreshToken: z.string()
         }),
-        AuthValidation.LOGIN,
-    )
-;
+    }),
+    requestSchema: AuthValidation.LOGIN,
+    description: "Login to the application"
+});
 
-export const logoutRoute = createRouteUtil(
-    "post",
-    "/logout",
-    z.object({
+export const logoutRoute = createRouteUtil({
+    method: "post",
+    path: "/logout",
+    tags: ["Auth"],
+    responseSchema: z.object({
         status: z.string(),
         message: z.string(),
         data: z.null(),
     }),
-    undefined,
-    [{BearerAuth: []}],
-);
+    security: [{BearerAuth: []}],
+    description: "Logout from the application",
+});
 
-export const resetPasswordRoute = createRouteUtil(
-    "post",
-    "/reset-password",
-    z.object({
+export const resetPasswordRoute = createRouteUtil({
+    method: "post",
+    path: "/reset-password",
+    tags: ["Auth"],
+    responseSchema: z.object({
         status: z.string(),
         message: z.string(),
         data: z.null(),
     }),
-    AuthValidation.RESET_PASSWORD,
-);
+    requestSchema: AuthValidation.RESET_PASSWORD,
+    description: "Reset password of the user",
+});
