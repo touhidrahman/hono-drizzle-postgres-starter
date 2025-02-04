@@ -1,19 +1,28 @@
 import {createRoute, OpenAPIHono} from "@hono/zod-openapi";
 import {z, ZodType} from "zod";
 
-export const createRouteUtil = (method: "post" | "get" | "put" | "patch" | "delete", path: string, requestSchema: ZodType, responseSchema: ZodType) => {
+export const createRouteUtil = (
+    method: "post" | "get" | "put" | "patch" | "delete",
+    path: string,
+    responseSchema: ZodType,
+    requestSchema?: ZodType,
+    security?: Parameters<typeof createRoute>[0]['security']
+) => {
     return createRoute({
         method,
         path,
-        request: {
-            body: {
-                content: {
-                    "application/json": {
-                        schema: requestSchema,
+        security,
+        ...(requestSchema ? {
+            request: {
+                body: {
+                    content: {
+                        "application/json": {
+                            schema: requestSchema,
+                        },
                     },
                 },
             },
-        },
+        } : {}),
         responses: {
             200: {
                 description: "Success",

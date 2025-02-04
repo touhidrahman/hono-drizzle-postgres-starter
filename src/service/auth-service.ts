@@ -5,6 +5,7 @@ import {HTTPException} from "hono/http-exception";
 import {password} from "bun";
 import {logger} from "../config/logging";
 import {generateAccessToken, generateRefreshToken} from "../util/jwt-util";
+import redis from "../config/redis";
 
 export class AuthService {
     static async register(request: RegisterUserRequest): Promise<UserResponse> {
@@ -54,6 +55,20 @@ export class AuthService {
         response.accessToken = access;
         response.refreshToken = refresh;
 
+        const loginAt = new Date();
+        await UserRepository.update(user.id, "id", {loginAt});
+
+        logger.info("User logged in successfully");
+
         return response;
+    }
+
+    static async logout(token: string): Promise<void> {
+        await redis.set(`blacklist:${token}`, 'true');
+        await redis.del(`user:${token}`);
+
+        logger.info("User logged out successfully");
+
+        return;
     }
 }

@@ -1,7 +1,7 @@
 import redis from "../config/redis";
 import {generateOTP} from "../util/otp-util";
 import {HTTPException} from "hono/http-exception";
-import {SendOTPRequest, UserRepository, VerifyOTPRequest} from "../model/user-model";
+import {UserRepository, VerifyOTPRequest} from "../model/user-model";
 
 export class OtpService {
     static async generateAndStoreOTP(email: string): Promise<string> {

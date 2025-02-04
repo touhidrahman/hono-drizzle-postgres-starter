@@ -18,7 +18,7 @@ export async function generateAccessToken(user: User): Promise<string> {
 export async function generateRefreshToken(user: User): Promise<string> {
     return await sign(
         {
-            sub: user.id,
+            id: user.id,
             iat: Math.floor(Date.now() / 1000),
             exp: Math.floor(Date.now() / 1000) + 60 * 60 * 24 * parseInt(process.env.REFRESH_TOKEN_EXPIRES_IN!)
         },

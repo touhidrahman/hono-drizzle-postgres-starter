@@ -1,10 +1,13 @@
-import {loginRoute, registerRoute, sendOTPRoute, verifyOTPRoute} from "../route/auth-route";
+import {loginRoute, logoutRoute, registerRoute, sendOTPRoute, verifyOTPRoute} from "../route/auth-route";
 import {LoginUserRequest, RegisterUserRequest, SendOTPRequest, VerifyOTPRequest} from "../model/user-model";
 import {AuthService} from "../service/auth-service";
 import {ResponseUtil} from "../util/response-util";
 import {EmailService} from "../service/email-service";
 import {honoApp} from "../config/hono";
 import {OtpService} from "../service/otp-service";
+import {jwt} from "hono/jwt";
+import {authMiddleware} from "../middleware/auth-middleware";
+import {User} from "../config/db/schema";
 
 export const authController = honoApp();
 
@@ -38,4 +41,14 @@ authController.openapi(loginRoute, async (c) => {
     const response = await AuthService.login(request);
 
     return c.json(ResponseUtil.success(response, 'Login successfully'));
+});
+
+authController.use('/logout', authMiddleware(process.env.JWT_ACCESS_SECRET!, 'access'));
+
+authController.openapi(logoutRoute, async (c) => {
+    const token = c.get('token') as string;
+
+    await AuthService.logout(token);
+
+    return c.json(ResponseUtil.success(null, 'Logout successfully'));
 });
