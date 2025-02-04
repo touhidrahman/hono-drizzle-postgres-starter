@@ -15,6 +15,12 @@ export type LoginUserRequest = {
     password: string;
 }
 
+export type ResetPasswordRequest = {
+    email: string;
+    password: string;
+    otp: number;
+}
+
 export type UpdateUserRequest = {
     name?: string;
     password?: string;

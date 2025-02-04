@@ -1,5 +1,18 @@
-import {loginRoute, logoutRoute, registerRoute, sendOTPRoute, verifyOTPRoute} from "../route/auth-route";
-import {LoginUserRequest, RegisterUserRequest, SendOTPRequest, VerifyOTPRequest} from "../model/user-model";
+import {
+    loginRoute,
+    logoutRoute,
+    registerRoute,
+    resetPasswordRoute,
+    sendOTPRoute,
+    verifyOTPRoute
+} from "../route/auth-route";
+import {
+    LoginUserRequest,
+    RegisterUserRequest,
+    ResetPasswordRequest,
+    SendOTPRequest,
+    VerifyOTPRequest
+} from "../model/user-model";
 import {AuthService} from "../service/auth-service";
 import {ResponseUtil} from "../util/response-util";
 import {EmailService} from "../service/email-service";
@@ -51,4 +64,12 @@ authController.openapi(logoutRoute, async (c) => {
     await AuthService.logout(token);
 
     return c.json(ResponseUtil.success(null, 'Logout successfully'));
+});
+
+authController.openapi(resetPasswordRoute, async (c) => {
+    const request = await c.req.json() as ResetPasswordRequest;
+
+    const user = await AuthService.resetPassword(request);
+
+    return c.json(ResponseUtil.success(null, 'Reset password successfully'));
 });
