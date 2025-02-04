@@ -43,7 +43,7 @@ authController.openapi(loginRoute, async (c) => {
     return c.json(ResponseUtil.success(response, 'Login successfully'));
 });
 
-authController.use('/logout', authMiddleware(process.env.JWT_ACCESS_SECRET!, 'access'));
+authController.use('/logout', authMiddleware(process.env.JWT_ACCESS_SECRET!));
 
 authController.openapi(logoutRoute, async (c) => {
     const token = c.get('token') as string;

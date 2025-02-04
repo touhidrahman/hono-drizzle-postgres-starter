@@ -5,11 +5,8 @@ import {verify} from "hono/jwt";
 import {UserRepository} from "../model/user-model";
 import {JWTPayload} from "hono/dist/types/utils/jwt/types";
 
-type TokenType = 'access' | 'refresh';
-
 export const authMiddleware = (
     secret: string,
-    tokenType: TokenType
 ): MiddlewareHandler => {
     return async (c: Context, next: Next) => {
         const authHeader = c.req.header('Authorization');
