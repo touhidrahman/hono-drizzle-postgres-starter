@@ -25,15 +25,3 @@ export async function generateRefreshToken(user: User): Promise<string> {
         process.env.JWT_REFRESH_SECRET!
     );
 }
-
-export async function verifyAccessToken(token: string): Promise<User> {
-    return await verify(token, process.env.JWT_ACCESS_SECRET!) as User;
-}
-
-export async function verifyRefreshToken(token: string): Promise<User> {
-    return await verify(token, process.env.JWT_REFRESH_SECRET!) as User;
-}
-
-export async function decodeAccessToken(token: string): Promise<User> {
-    return await verify(token, process.env.JWT_ACCESS_SECRET!) as User;
-}

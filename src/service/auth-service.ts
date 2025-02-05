@@ -1,7 +1,7 @@
 import {
     LoginUserRequest,
     RegisterUserRequest,
-    ResetPasswordRequest,
+    ResetPasswordRequest, TokenResponse,
     toUserResponse,
     UserRepository,
     UserResponse
@@ -43,6 +43,12 @@ export class AuthService {
         if (!user || !user.password) {
             throw new HTTPException(401, {
                 message: 'Email or Password incorrect'
+            });
+        }
+
+        if (!user.emailVerified) {
+            throw new HTTPException(401, {
+                message: 'Email not verified'
             });
         }
 
@@ -144,5 +150,29 @@ export class AuthService {
 
             return response;
         });
+    }
+
+    static async refreshToken(request: { refreshToken: string }): Promise<TokenResponse> {
+        const isBlacklisted = await redis.exists(`blacklist:${request.refreshToken}`);
+        if (isBlacklisted) {
+            throw new HTTPException(401, {
+                message: 'Token has been invalidated'
+            });
+        }
+
+        const jwtPayload = await verify(request.refreshToken, process.env.JWT_REFRESH_SECRET!);
+        const [user] = await UserRepository.findByColumn('id', jwtPayload.id);
+        if (jwtPayload.id != user.id) {
+            throw new HTTPException(401, {
+                message: 'Unauthorized'
+            });
+        }
+
+        const [access, refresh] = await Promise.all([
+            generateAccessToken(user),
+            generateRefreshToken(user)
+        ]);
+
+        return {accessToken: access, refreshToken: refresh} as TokenResponse;
     }
 }

@@ -1,7 +1,7 @@
 import {
     googleLoginRoute,
     loginRoute,
-    logoutRoute,
+    logoutRoute, refreshTokenRoute,
     registerRoute,
     resetPasswordRoute,
     sendOTPRoute,
@@ -21,6 +21,7 @@ import {honoApp} from "../config/hono";
 import {OtpService} from "../service/otp-service";
 import {authMiddleware} from "../middleware/auth-middleware";
 import {googleAuth} from '@hono/oauth-providers/google'
+import {User} from "../config/db/schema";
 
 export const authController = honoApp();
 
@@ -90,4 +91,12 @@ authController.openapi(googleLoginRoute, async (c) => {
     const response = await AuthService.googleLogin(user);
 
     return c.json(ResponseUtil.success(response, 'Login successfully'));
+});
+
+authController.openapi(refreshTokenRoute, async (c) => {
+    const request = await c.req.json() as { refreshToken: string };
+
+    const response = await AuthService.refreshToken(request);
+
+    return c.json(ResponseUtil.success(response, 'Refresh token successfully'));
 });

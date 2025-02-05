@@ -35,6 +35,11 @@ export type VerifyOTPRequest = {
     otp: number;
 }
 
+export type TokenResponse = {
+    accessToken: string;
+    refreshToken: string;
+}
+
 export type UserResponse = {
     email: string;
     name: string;

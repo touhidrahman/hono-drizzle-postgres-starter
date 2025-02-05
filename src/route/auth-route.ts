@@ -109,3 +109,21 @@ export const googleLoginRoute = createRouteUtil({
     }),
     description: "Login with google",
 });
+
+export const refreshTokenRoute = createRouteUtil({
+    method: "post",
+    path: "/refresh-token",
+    tags: ["Auth"],
+    responseSchema: z.object({
+        status: z.string(),
+        message: z.string(),
+        data: z.object({
+            accessToken: z.string(),
+            refreshToken: z.string()
+        }),
+    }),
+    requestSchema: z.object({
+        refreshToken: z.string(),
+    }),
+    description: "Refresh token",
+});
