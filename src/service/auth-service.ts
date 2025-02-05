@@ -13,6 +13,7 @@ import {password} from "bun";
 import {logger} from "../config/logging";
 import {generateAccessToken, generateRefreshToken} from "../util/jwt-util";
 import redis from "../config/redis";
+import {verify} from "hono/jwt";
 
 export class AuthService {
     static async register(request: RegisterUserRequest): Promise<UserResponse> {
@@ -70,9 +71,18 @@ export class AuthService {
         return response;
     }
 
-    static async logout(token: string): Promise<void> {
+    static async logout(token: string, refreshToken: string, userId: string): Promise<void> {
         await redis.set(`blacklist:${token}`, 'true');
         await redis.del(`user:${token}`);
+
+        const jwtPayload = await verify(token, process.env.JWT_REFRESH_SECRET!);
+        if (jwtPayload.id != userId) {
+            throw new HTTPException(401, {
+                message: 'Unauthorized'
+            });
+        }
+
+        await redis.set(`blacklist:${refreshToken}`, 'true');
 
         logger.info("User logged out successfully");
 

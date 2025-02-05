@@ -60,8 +60,10 @@ authController.use('/logout', authMiddleware(process.env.JWT_ACCESS_SECRET!));
 
 authController.openapi(logoutRoute, async (c) => {
     const token = c.get('token') as string;
+    const userId = c.get('user')?.id as string;
+    const refreshToken = await c.req.json();
 
-    await AuthService.logout(token);
+    await AuthService.logout(token, refreshToken, userId);
 
     return c.json(ResponseUtil.success(null, 'Logout successfully'));
 });

@@ -72,6 +72,9 @@ export const logoutRoute = createRouteUtil({
         message: z.string(),
         data: z.null(),
     }),
+    requestSchema: z.object({
+        refreshToken: z.string(),
+    }),
     security: [{BearerAuth: []}],
     description: "Logout from the application",
 });
