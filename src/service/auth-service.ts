@@ -13,6 +13,7 @@ import {password} from "bun";
 import {logger} from "../config/logging";
 import {generateAccessToken, generateRefreshToken} from "../util/jwt-util";
 import redis from "../config/redis";
+import {verify} from "hono/jwt";
 
 export class AuthService {
     static async register(request: RegisterUserRequest): Promise<UserResponse> {
@@ -70,9 +71,18 @@ export class AuthService {
         return response;
     }
 
-    static async logout(token: string): Promise<void> {
+    static async logout(token: string, refreshToken: string, userId: string): Promise<void> {
         await redis.set(`blacklist:${token}`, 'true');
         await redis.del(`user:${token}`);
+
+        const jwtPayload = await verify(token, process.env.JWT_REFRESH_SECRET!);
+        if (jwtPayload.id != userId) {
+            throw new HTTPException(401, {
+                message: 'Unauthorized'
+            });
+        }
+
+        await redis.set(`blacklist:${refreshToken}`, 'true');
 
         logger.info("User logged out successfully");
 
@@ -101,5 +111,38 @@ export class AuthService {
         logger.info("Password reset successfully");
 
         return toUserResponse(user);
+    }
+
+    static async googleLogin(request: any): Promise<UserResponse> {
+        return await UserRepository.transaction(async (repo) => {
+            let [user] = await repo.findByColumn('email', request.email);
+
+            if (!user) {
+                const userData = {
+                    email: request.email,
+                    name: request.name,
+                    role: 'USER',
+                    loginAt: new Date(),
+                    emailVerified: new Date()
+                };
+                user = await repo.create(userData);
+            } else {
+                const loginAt = new Date();
+                await repo.update(user.id, 'id', {loginAt});
+            }
+
+            const [access, refresh] = await Promise.all([
+                generateAccessToken(user),
+                generateRefreshToken(user)
+            ]);
+
+            const response = toUserResponse(user);
+            response.accessToken = access;
+            response.refreshToken = refresh;
+
+            logger.info("User logged in successfully");
+
+            return response;
+        });
     }
 }

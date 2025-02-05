@@ -26,12 +26,12 @@ export const authMiddleware = (
 
         if (userRedis) {
             c.set('user', JSON.parse(userRedis));
-            c.set('token', token);
+            c.set('token', token as any);
 
         } else {
             const user = await UserRepository.findById(jwtPayload.id as string);
             c.set('user', user);
-            c.set('token', token);
+            c.set('token', token as any);
             await redis.set(`user:${token}`, JSON.stringify(user), 'EX', 3 * 60 * 60);
         }
 

@@ -12,7 +12,7 @@ export const usersTable = pgTable("users", {
     ()`),
     name: varchar({length: 100}).notNull(),
     email: varchar({length: 100}).notNull().unique(),
-    password: varchar({length: 255}).notNull(),
+    password: varchar({length: 255}).default(sql`NULL`),
     role: roleEnum().default("USER").notNull(),
     emailVerified: timestamp().default(sql`NULL`),
     loginAt: timestamp().default(sql`NULL`),

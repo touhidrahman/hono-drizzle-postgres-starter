@@ -1,4 +1,5 @@
 import {
+    googleLoginRoute,
     loginRoute,
     logoutRoute,
     registerRoute,
@@ -18,9 +19,8 @@ import {ResponseUtil} from "../util/response-util";
 import {EmailService} from "../service/email-service";
 import {honoApp} from "../config/hono";
 import {OtpService} from "../service/otp-service";
-import {jwt} from "hono/jwt";
 import {authMiddleware} from "../middleware/auth-middleware";
-import {User} from "../config/db/schema";
+import {googleAuth} from '@hono/oauth-providers/google'
 
 export const authController = honoApp();
 
@@ -60,8 +60,10 @@ authController.use('/logout', authMiddleware(process.env.JWT_ACCESS_SECRET!));
 
 authController.openapi(logoutRoute, async (c) => {
     const token = c.get('token') as string;
+    const userId = c.get('user')?.id as string;
+    const refreshToken = await c.req.json();
 
-    await AuthService.logout(token);
+    await AuthService.logout(token, refreshToken, userId);
 
     return c.json(ResponseUtil.success(null, 'Logout successfully'));
 });
@@ -72,4 +74,20 @@ authController.openapi(resetPasswordRoute, async (c) => {
     const user = await AuthService.resetPassword(request);
 
     return c.json(ResponseUtil.success(null, 'Reset password successfully'));
+});
+
+authController.use('/google',
+    googleAuth({
+        client_id: process.env.GOOGLE_CLIENT_ID!,
+        client_secret: process.env.GOOGLE_CLIENT_SECRET!,
+        scope: ['openid', 'email', 'profile'],
+    })
+);
+
+authController.openapi(googleLoginRoute, async (c) => {
+    const user = c.get('user-google')
+
+    const response = await AuthService.googleLogin(user);
+
+    return c.json(ResponseUtil.success(response, 'Login successfully'));
 });

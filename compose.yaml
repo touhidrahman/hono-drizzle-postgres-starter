@@ -15,6 +15,8 @@ services:
       - .:/app
       - /app/node_modules
     command: sh -c "bun run migrate && bun run seed && bun run dev"
+    networks:
+      - internal_network
 
   worker:
     build: .
@@ -30,11 +32,11 @@ services:
       - .:/app
       - /app/node_modules
     command: sh -c "bun run worker"
+    networks:
+      - internal_network
 
   db:
     image: postgres:latest
-    ports:
-      - "5432:5432"
     environment:
       - POSTGRES_DB=${POSTGRES_DB}
       - POSTGRES_USER=${POSTGRES_USER}
@@ -54,11 +56,11 @@ services:
       psql -U ${POSTGRES_USER} -d ${POSTGRES_DB} -c 'CREATE EXTENSION IF NOT EXISTS \"uuid-ossp\";' &&
       wait
       "
+    networks:
+      - internal_network
 
   redis:
     image: redis:latest
-    ports:
-      - "6379:6379"
     volumes:
       - redis_data:/data
     healthcheck:
@@ -67,7 +69,13 @@ services:
       timeout: 5s
       retries: 5
       start_period: 10s
+    networks:
+      - internal_network
 
 volumes:
   postgres_data:
   redis_data:
+
+networks:
+  internal_network:
+    driver: bridge
