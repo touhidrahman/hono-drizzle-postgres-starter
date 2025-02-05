@@ -144,10 +144,10 @@ export class Repository<TEntity extends Record<string, any>> {
         return Number(result[0].count)
     }
 
-    async transaction<TEntity>(fn: TEntityTransactionFunction): Promise<TEntity> {
-        return await this.db.transaction(async (tx: Repository<any>) => {
-            const repo = new Repository(tx, this.table)
-            await fn(repo)
-        }) as TEntity
+    async transaction<T>(fn: (repo: Repository<TEntity>) => Promise<T>): Promise<T> {
+        return await this.db.transaction(async (tx: any) => {
+            const repo = new Repository<TEntity>(tx, this.table);
+            return await fn(repo);
+        });
     }
 }

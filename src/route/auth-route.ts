@@ -88,3 +88,21 @@ export const resetPasswordRoute = createRouteUtil({
     requestSchema: AuthValidation.RESET_PASSWORD,
     description: "Reset password of the user",
 });
+
+export const googleLoginRoute = createRouteUtil({
+    method: "get",
+    path: "/google",
+    tags: ["Auth"],
+    responseSchema: z.object({
+        status: z.string(),
+        message: z.string(),
+        data: z.object({
+            email: z.string().email(),
+            name: z.string(),
+            role: z.string(),
+            accessToken: z.string(),
+            refreshToken: z.string()
+        }),
+    }),
+    description: "Login with google",
+});

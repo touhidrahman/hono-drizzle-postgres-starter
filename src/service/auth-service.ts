@@ -102,4 +102,37 @@ export class AuthService {
 
         return toUserResponse(user);
     }
+
+    static async googleLogin(request: any): Promise<UserResponse> {
+        return await UserRepository.transaction(async (repo) => {
+            let [user] = await repo.findByColumn('email', request.email);
+
+            if (!user) {
+                const userData = {
+                    email: request.email,
+                    name: request.name,
+                    role: 'USER',
+                    loginAt: new Date(),
+                    emailVerified: new Date()
+                };
+                user = await repo.create(userData);
+            } else {
+                const loginAt = new Date();
+                await repo.update(user.id, 'id', {loginAt});
+            }
+
+            const [access, refresh] = await Promise.all([
+                generateAccessToken(user),
+                generateRefreshToken(user)
+            ]);
+
+            const response = toUserResponse(user);
+            response.accessToken = access;
+            response.refreshToken = refresh;
+
+            logger.info("User logged in successfully");
+
+            return response;
+        });
+    }
 }
