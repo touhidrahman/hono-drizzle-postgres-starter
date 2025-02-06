@@ -7,6 +7,7 @@ import {JWTPayload} from "hono/dist/types/utils/jwt/types";
 
 export const authMiddleware = (
     secret: string,
+    role?: string
 ): MiddlewareHandler => {
     return async (c: Context, next: Next) => {
         const authHeader = c.req.header('Authorization');
@@ -24,16 +25,26 @@ export const authMiddleware = (
         const jwtPayload: JWTPayload = await verify(token, secret);
         const userRedis = await redis.get(`user:${jwtPayload.id}`);
 
+        let user;
+
         if (userRedis) {
-            c.set('user', JSON.parse(userRedis));
-            c.set('token', token as any);
+            user = JSON.parse(userRedis);
 
         } else {
-            const user = await UserRepository.findById(jwtPayload.id as string);
-            c.set('user', user);
-            c.set('token', token as any);
-            await redis.set(`user:${token}`, JSON.stringify(user), 'EX', 3 * 60 * 60);
+            user = await UserRepository.findById(jwtPayload.id as string);
+            await redis.set(`user:${jwtPayload.id}`, JSON.stringify(user), 'EX', 3 * 60 * 60);
         }
+
+        if (!user) {
+            throw new HTTPException(404, {message: 'User not found'});
+        }
+
+        if (role && role !== user.role) {
+            throw new HTTPException(403, {message: 'Forbidden'});
+        }
+
+        c.set('user', user);
+        c.set('token', token as any);
 
         await next();
     }

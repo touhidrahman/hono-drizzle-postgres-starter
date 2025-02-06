@@ -21,7 +21,6 @@ import {honoApp} from "../config/hono";
 import {OtpService} from "../service/otp-service";
 import {authMiddleware} from "../middleware/auth-middleware";
 import {googleAuth} from '@hono/oauth-providers/google'
-import {User} from "../config/db/schema";
 
 export const authController = honoApp();
 
