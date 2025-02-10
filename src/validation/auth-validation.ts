@@ -12,12 +12,6 @@ export class AuthValidation {
         password: z.string().min(6),
     });
 
-    static readonly UPDATE: ZodType = z.object({
-        email: z.string().email(),
-        password: z.string().min(6),
-        name: z.string().min(3),
-    });
-
     static readonly SEND_OTP: ZodType = z.object({
         email: z.string().email(),
     });
@@ -31,10 +25,5 @@ export class AuthValidation {
         email: z.string().email(),
         password: z.string().min(6),
         otp: z.string().length(6),
-    });
-
-    static readonly CHANGE_PASSWORD: ZodType = z.object({
-        oldPassword: z.string().min(6),
-        newPassword: z.string().min(6),
     });
 }

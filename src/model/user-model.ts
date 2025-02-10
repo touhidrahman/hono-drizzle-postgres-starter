@@ -23,7 +23,11 @@ export type ResetPasswordRequest = {
 
 export type UpdateUserRequest = {
     name?: string;
-    password?: string;
+}
+
+export type ChangePasswordRequest = {
+    oldPassword?: string;
+    newPassword: string;
 }
 
 export type SendOTPRequest = {
