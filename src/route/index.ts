@@ -16,4 +16,4 @@ api.openAPIRegistry.registerComponent(
 )
 
 api.route("/auth", authController);
-api.route("/user", userController);
+api.route("/", userController);

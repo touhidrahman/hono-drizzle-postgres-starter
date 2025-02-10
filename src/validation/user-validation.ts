@@ -2,8 +2,6 @@ import {z, ZodType} from "zod";
 
 export class UserValidation {
     static readonly UPDATE: ZodType = z.object({
-        email: z.string().email(),
-        password: z.string().min(6),
         name: z.string().min(3),
     });
 
