@@ -35,5 +35,3 @@ The documentation for the API can be found at the following URL:
 http://localhost:3000/doc // OpenAPI
 http://localhost:3000/ui // SwaggerUI
 ```
-
-> Semoga ga terlantar ini project :v, bismillah konsisten awkaokwoa
