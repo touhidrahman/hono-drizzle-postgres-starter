@@ -93,24 +93,25 @@ Once the application is running, you can access the API documentation at:
 ## 📁 Project Structure
 
 ```
-├── src/
-│   ├── drizzle/         # Drizzle ORM migration
-|   ├── config/          # Configuration files
-│   ├── controllers/     # Request handlers
-│   ├── middleware/      # Custom middleware
-│   ├── models/          # Database models
-│   ├── routes/          # API routes and Swagger documentation
-│   ├── services/        # Business logic
-|   ├── types/           # Type definitions and Repository abstraction
-│   ├── utils/           # Utility functions
-|   ├── validation/      # Request validation schemas
-│   └── index.ts         # App entry point
-|   └── worker.ts        # Worker entry point
-├── .env.example         # Environment variables example
-├── compose.yml          # Docker Compose configuration
-├── Dockerfile           # Docker configuration
-├── drizzle.config.ts    # Drizzle ORM configuration
-└── package.json         # Dependencies and scripts
+📦 ROOT
+├── 📂 drizzle/             # 🔄 Drizzle ORM migration
+├── 📂 src/
+│   ├── 📂 config/          # ⚙️ Configuration files
+│   ├── 📂 controllers/     # 🎮 Request handlers
+│   ├── 📂 middleware/      # 🔌 Custom middleware
+│   ├── 📂 models/          # 📊 Database models
+│   ├── 📂 routes/          # 🛣️ API routes and Swagger documentation
+│   ├── 📂 services/        # 🧩 Business logic
+│   ├── 📂 types/           # 📝 Type definitions and Repository abstraction
+│   ├── 📂 utils/           # 🔧 Utility functions
+│   ├── 📂 validation/      # ✅ Request validation schemas
+│   ├── 📄 index.ts         # 🚀 App entry point
+│   └── 📄 worker.ts        # 👷 Worker entry point
+├── 📄 .env.example         # 🔐 Environment variables example
+├── 📄 compose.yml          # 🐳 Docker Compose configuration
+├── 📄 Dockerfile           # 📦 Docker configuration
+├── 📄 drizzle.config.ts    # 🗃️ Drizzle ORM configuration
+└── 📄 package.json         # 📋 Dependencies and scripts
 ```
 
 ## 🤝 Contributing
