@@ -117,4 +117,3 @@ Once the application is running, you can access the API documentation at:
 ## 🤝 Contributing
 
 Contributions, issues, and feature requests are welcome! See [CONTRIBUTING.md](CONTRIBUTING.md) for more information.
-
