@@ -8,7 +8,7 @@ performance.
 - **🔥 [Hono](https://hono.dev/)** - Ultra-fast web framework for the edge
 - **🔐 Authentication & Authorization**
     - JWT token-based authentication
-    - OAuth2 integration (Google, GitHub, etc.)
+    - OAuth2 integration (Google)
     - Email OTP verification
 - **📊 Database Integration**
     - [Drizzle ORM](https://orm.drizzle.team/) - Type-safe SQL query builder
@@ -17,7 +17,6 @@ performance.
     - Redis for high-performance caching and session management
 - **🐳 DevOps Ready**
     - Docker & Docker Compose for containerization
-    - Ready for CI/CD integration
 - **📝 API Documentation**
     - Auto-generated OpenAPI documentation
     - Interactive SwaggerUI interface
