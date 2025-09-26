@@ -1,9 +1,8 @@
 import { sql } from 'drizzle-orm'
 import { pgEnum, pgTable, timestamp, varchar } from 'drizzle-orm/pg-core'
-import { date } from 'drizzle-orm/pg-core/columns/date'
-import { uuid } from 'drizzle-orm/pg-core/columns/uuid'
 import { Role } from '../../types/enum/role-enum'
 import { enumToArray } from '../../util/enum-util'
+import { id, timestampColumns } from './helpers'
 
 export const roleEnum = pgEnum(
     'role',
@@ -11,22 +10,14 @@ export const roleEnum = pgEnum(
 )
 
 export const usersTable = pgTable('users', {
-    id: uuid()
-        .unique()
-        .primaryKey()
-        .default(sql`uuid_generate_v4
-    ()`),
+    id: id(),
     name: varchar({ length: 100 }).notNull(),
     email: varchar({ length: 100 }).notNull().unique(),
     password: varchar({ length: 255 }).default(sql`NULL`),
     role: roleEnum().default('USER').notNull(),
-    emailVerified: timestamp().default(sql`NULL`),
-    loginAt: timestamp().default(sql`NULL`),
-    createdAt: date().default(sql`now
-    ()`),
-    updatedAt: date().default(sql`now
-    ()`),
-    deletedAt: date().default(sql`NULL`),
+    emailVerifiedAt: timestamp({ withTimezone: true }).default(sql`NULL`),
+    loginAt: timestamp({ withTimezone: true }).default(sql`NULL`),
+    ...timestampColumns,
 })
 
 export type User = typeof usersTable.$inferSelect

@@ -1,5 +1,5 @@
 {
-    "id": "c685c331-f34b-4972-a382-10fe26b1d028",
+    "id": "dd51723b-9911-435e-ba72-831225463879",
     "prevId": "00000000-0000-0000-0000-000000000000",
     "version": "7",
     "dialect": "postgresql",
@@ -10,10 +10,9 @@
             "columns": {
                 "id": {
                     "name": "id",
-                    "type": "uuid",
+                    "type": "text",
                     "primaryKey": true,
-                    "notNull": true,
-                    "default": "uuid_generate_v4\n    ()"
+                    "notNull": true
                 },
                 "name": {
                     "name": "name",
@@ -31,7 +30,8 @@
                     "name": "password",
                     "type": "varchar(255)",
                     "primaryKey": false,
-                    "notNull": true
+                    "notNull": false,
+                    "default": "NULL"
                 },
                 "role": {
                     "name": "role",
@@ -41,30 +41,36 @@
                     "notNull": true,
                     "default": "'USER'"
                 },
-                "emailVerified": {
-                    "name": "emailVerified",
-                    "type": "timestamp",
+                "emailVerifiedAt": {
+                    "name": "emailVerifiedAt",
+                    "type": "timestamp with time zone",
+                    "primaryKey": false,
+                    "notNull": false,
+                    "default": "NULL"
+                },
+                "loginAt": {
+                    "name": "loginAt",
+                    "type": "timestamp with time zone",
                     "primaryKey": false,
                     "notNull": false,
                     "default": "NULL"
                 },
                 "createdAt": {
                     "name": "createdAt",
-                    "type": "date",
+                    "type": "timestamp with time zone",
                     "primaryKey": false,
                     "notNull": false,
-                    "default": "now\n    ()"
+                    "default": "now()"
                 },
                 "updatedAt": {
                     "name": "updatedAt",
-                    "type": "date",
+                    "type": "timestamp with time zone",
                     "primaryKey": false,
-                    "notNull": false,
-                    "default": "now\n    ()"
+                    "notNull": false
                 },
                 "deletedAt": {
                     "name": "deletedAt",
-                    "type": "date",
+                    "type": "timestamp with time zone",
                     "primaryKey": false,
                     "notNull": false,
                     "default": "NULL"
