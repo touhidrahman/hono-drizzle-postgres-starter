@@ -2,8 +2,9 @@
     "name": "Hono-Starter-Code",
     "scripts": {
         "dev": "bun run --hot src/index.ts",
-        "seed": "bun run src/config/db/seed.ts",
-        "migrate": "bunx drizzle-kit generate && bunx drizzle-kit migrate",
+        "db:seed": "bun run src/config/db/seed.ts",
+        "db:migrate": "bunx drizzle-kit generate && bunx drizzle-kit migrate",
+        "db:studio": "bunx drizzle-kit studio",
         "check": "bunx biome check --write --unsafe",
         "f": "bunx biome check --write --unsafe",
         "worker": "bun run src/worker.ts"

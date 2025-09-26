@@ -49,7 +49,7 @@ export class AuthService {
             })
         }
 
-        if (!user.emailVerified) {
+        if (!user.emailVerifiedAt) {
             throw new HTTPException(401, {
                 message: 'Email not verified',
             })

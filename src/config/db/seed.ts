@@ -10,10 +10,10 @@ async function seed() {
 
     await reset(db, schema)
 
-    const users = Array.from({ length: 10 }, () => ({
+    const users = Array.from({ length: 100 }, () => ({
         name: faker.person.fullName(),
         email: faker.internet.email().toLowerCase(),
-        password: password.hashSync('admin11', 'bcrypt'),
+        password: password.hashSync('Abcd1234!', 'bcrypt'),
         emailVerified: faker.date.recent(),
         role: 'USER',
     }))
@@ -21,7 +21,7 @@ async function seed() {
     users.push({
         name: 'Admin',
         email: 'admin@gmail.com',
-        password: password.hashSync('admin11', 'bcrypt'),
+        password: password.hashSync('Abcd1234!', 'bcrypt'),
         emailVerified: faker.date.recent(),
         role: 'ADMIN',
     })
