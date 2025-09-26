@@ -1,4 +1,4 @@
-import {SQL, SQLWrapper, sql, eq} from 'drizzle-orm'
+import { eq, type SQL, type SQLWrapper, sql } from 'drizzle-orm'
 
 type TEntityTransactionFunction = (tx: Repository<any>) => Promise<void>
 
@@ -11,20 +11,23 @@ interface SelectOptions {
 }
 
 export class Repository<TEntity extends Record<string, any>> {
-    constructor(private db: any, private table: any) {
-    }
+    constructor(
+        private db: any,
+        private table: any,
+    ) {}
 
-    async create(
-        entity: Partial<TEntity>
-    ): Promise<TEntity> {
-        const result: any = await this.db.insert(this.table).values(entity).returning()
+    async create(entity: Partial<TEntity>): Promise<TEntity> {
+        const result: any = await this.db
+            .insert(this.table)
+            .values(entity)
+            .returning()
         return result[0] as TEntity
     }
 
     async update(
         identifier: string,
         identifierColumn: keyof TEntity,
-        entity: Partial<TEntity>
+        entity: Partial<TEntity>,
     ): Promise<TEntity> {
         const result = await this.db
             .update(this.table)
@@ -40,7 +43,7 @@ export class Repository<TEntity extends Record<string, any>> {
 
     async findById(
         id: string,
-        options?: Omit<SelectOptions, 'where'>
+        options?: Omit<SelectOptions, 'where'>,
     ): Promise<TEntity | null> {
         let query = this.db.select()
 
@@ -49,7 +52,7 @@ export class Repository<TEntity extends Record<string, any>> {
                 options.columns.reduce((acc: any, col) => {
                     acc[col] = this.table[col]
                     return acc
-                }, {})
+                }, {}),
             )
         } else {
             query = this.db.select()
@@ -63,9 +66,7 @@ export class Repository<TEntity extends Record<string, any>> {
         return (result[0] as TEntity) || null
     }
 
-    async findAll(
-        options?: SelectOptions
-    ): Promise<TEntity[]> {
+    async findAll(options?: SelectOptions): Promise<TEntity[]> {
         let query = this.db.select()
 
         if (options?.columns?.length) {
@@ -73,7 +74,7 @@ export class Repository<TEntity extends Record<string, any>> {
                 options.columns.reduce((acc: any, col) => {
                     acc[col] = this.table[col]
                     return acc
-                }, {})
+                }, {}),
             )
         }
 
@@ -101,7 +102,7 @@ export class Repository<TEntity extends Record<string, any>> {
     async findByColumn(
         column: keyof typeof this.table,
         value: any,
-        options?: Omit<SelectOptions, 'where'>
+        options?: Omit<SelectOptions, 'where'>,
     ): Promise<TEntity[]> {
         let query = this.db.select()
 
@@ -110,13 +111,11 @@ export class Repository<TEntity extends Record<string, any>> {
                 options.columns.reduce((acc: any, col) => {
                     acc[col] = this.table[col]
                     return acc
-                }, {})
+                }, {}),
             )
         }
 
-        query = query
-            .from(this.table)
-            .where(eq(this.table[column], value))
+        query = query.from(this.table).where(eq(this.table[column], value))
 
         if (options?.orderBy) {
             query = query.orderBy(options.orderBy)
@@ -133,21 +132,21 @@ export class Repository<TEntity extends Record<string, any>> {
         return query as Promise<TEntity[]>
     }
 
-    async count(
-        where?: SQLWrapper
-    ): Promise<number> {
+    async count(where?: SQLWrapper): Promise<number> {
         const result = await this.db
-            .select({count: sql<number>`count(*)`})
+            .select({ count: sql<number>`count(*)` })
             .from(this.table)
             .where(where || undefined)
 
         return Number(result[0].count)
     }
 
-    async transaction<T>(fn: (repo: Repository<TEntity>) => Promise<T>): Promise<T> {
+    async transaction<T>(
+        fn: (repo: Repository<TEntity>) => Promise<T>,
+    ): Promise<T> {
         return await this.db.transaction(async (tx: any) => {
-            const repo = new Repository<TEntity>(tx, this.table);
-            return await fn(repo);
-        });
+            const repo = new Repository<TEntity>(tx, this.table)
+            return await fn(repo)
+        })
     }
 }

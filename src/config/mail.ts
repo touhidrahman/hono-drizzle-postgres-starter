@@ -1,4 +1,4 @@
-import nodemailer from 'nodemailer';
+import nodemailer from 'nodemailer'
 
 export const transporter = nodemailer.createTransport({
     service: process.env.MAIL_SERVICE,
@@ -9,4 +9,4 @@ export const transporter = nodemailer.createTransport({
         user: process.env.MAIL_USERNAME,
         pass: process.env.MAIL_PASSWORD,
     },
-});
+})
